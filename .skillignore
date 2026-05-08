@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+evals/*_document_profile.json
+evals/*_audit_report.md
+evals/*_profile_*.md
+evals/*.html

@@ -1,0 +1,35 @@
+{
+  "skill_name": "ontology-guided-annotation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我有一个领域本体 OWL 文件，里面定义了类、对象属性、数据属性和少量已有实例。请读取这个 OWL，生成中文 ontology_profile.md，并告诉我哪些地方必须人工审核后才能开始标注。",
+      "expected_output": "生成中文 ontology_profile.md，并给出面向人工审核的清单，覆盖类、对象属性、数据属性、domain/range、restriction、已有实例和抽象类判断。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我有一批 PDF、图片和 DOCX 文档，想基于已经审核过的 ontology_profile.md 做一小批训练数据标注。请先把文档抽取成 document_profile.json，再选择少量文本块生成 annotation_batch_001.jsonl。不确定的类别或关系不要硬标，放到 questions_for_user.md 里问我。",
+      "expected_output": "生成 document_profile.json、一个小批量 JSONL 标注文件，以及针对不确定实体/关系/属性的用户确认问题。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "请审核这一批 ontology-guided annotation JSONL，检查类和属性是否存在、domain/range 是否匹配、证据是否充分、低置信度项是否误接受，并生成中文 audit_report.md 和 review.md。",
+      "expected_output": "生成中文审核报告和 review.md，列出错误、警告、低置信度项、冲突、待用户确认项和下一批建议。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "请把 accepted.jsonl、pending_review.jsonl、rejected_or_negative.jsonl、document_profile.json 和 audit_report.md 做成一个中文静态 HTML 审核页面，让我可以查看摘要和标注结果，并对 pending 项选择接受、修改、拒绝或暂缓。",
+      "expected_output": "生成中文 review_dashboard.html，包含摘要、文档块、已接受标注、待审核标注、负例/拒绝项、审核报告和可导出的反馈 JSON。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "用户已经审核完 pending 项，现在请把 accepted.jsonl 导出成可训练数据，包括规范抽取结果、LLM 微调格式、关系抽取格式和 NER span 格式。",
+      "expected_output": "生成 training_data 目录，包含 canonical_accepted.jsonl、llm_finetune.jsonl、relation_extraction.jsonl、ner_spans.jsonl 和 README.md。pending/rejected 不应进入训练数据。",
+      "files": []
+    }
+  ]
+}

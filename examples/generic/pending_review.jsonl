@@ -1,0 +1,1 @@
+{"id":"ann-pending-0001","source":{"document_id":"generic-example","block_id":"b2"},"text":"The term D may refer to a process or a product depending on context.","entities":[{"id":"e1","text":"term D","class":"ProcessOrProduct","start":4,"end":10,"confidence":0.55}],"relations":[],"attributes":[],"status":"needs_user_review"}

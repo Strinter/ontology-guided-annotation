@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>本体标注结果审核</title>
+  <style>
+    :root {
+      --bg: #f7f7f4;
+      --panel: #ffffff;
+      --text: #242424;
+      --muted: #666;
+      --line: #d9d7cf;
+      --accent: #2f6f73;
+      --accent-soft: #e5f0ef;
+      --warn: #8a5a00;
+      --mention: #f3efe3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    h1 { margin: 0; font-size: 28px; }
+    h2 { margin: 0 0 14px; font-size: 20px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 0 18px;
+    }
+    nav a {
+      color: var(--accent);
+      background: var(--accent-soft);
+      text-decoration: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    section {
+      margin: 0 0 24px;
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fbfbfa;
+    }
+    .stat strong { display: block; font-size: 24px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .card, .block {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 14px;
+      margin: 12px 0;
+      background: #fff;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    .source-text {
+      margin: 12px 0;
+      padding: 10px;
+      background: #f3f3ee;
+      border-radius: 5px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 10px;
+      margin: 12px 0;
+      align-items: start;
+    }
+    .entity-row, .triple-row, .attribute-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 7px 0;
+      border-bottom: 1px solid #eeeeea;
+    }
+    .mention {
+      padding: 2px 7px;
+      background: var(--mention);
+      border: 1px solid #ded5bd;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .class-name {
+      padding: 2px 7px;
+      background: var(--accent-soft);
+      color: #174a4d;
+      border-radius: 5px;
+    }
+    .predicate {
+      padding: 2px 8px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    .triple-node {
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfbfa;
+      font-weight: 600;
+    }
+    .triple-node small {
+      display: block;
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 12px;
+    }
+    .arrow, .meta, .confidence {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .decision {
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 4px solid var(--warn);
+      background: #fff8e8;
+    }
+    .decision label { margin-right: 14px; white-space: nowrap; }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 68px;
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      font: inherit;
+      resize: vertical;
+    }
+    button {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    pre {
+      overflow: auto;
+      white-space: pre-wrap;
+      background: #f3f3ee;
+      border-radius: 6px;
+      padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>本体标注结果审核</h1>
+    <p class="muted">反馈导出</p>
+  </header>
+  <main>
+    <nav>
+      <a href="#summary">摘要</a>
+      <a href="#documents">文档块</a>
+      <a href="#accepted">已接受</a>
+      <a href="#pending">待审核</a>
+      <a href="#rejected">已拒绝/负例</a>
+      <a href="#audit">审核报告</a>
+    </nav>
+    <section id="summary">
+      <h2>摘要</h2>
+      <div class="stats">
+        <div class="stat"><strong>2</strong><span>文档块</span></div>
+        <div class="stat"><strong>1</strong><span>已接受 · 实体 3 · 关系三元组 2</span></div>
+        <div class="stat"><strong>1</strong><span>待审核 · 实体 1 · 关系三元组 0</span></div>
+        <div class="stat"><strong>1</strong><span>已拒绝/负例 · 实体 0 · 关系三元组 0</span></div>
+      </div>
+    </section>
+    <section id="documents">
+      <h2>文档块</h2>
+      
+            <article class="block">
+              <strong>b1</strong>
+              <span class="muted">来源: example.txt · 页 </span>
+              <p>Example item A is made with material B and comes from place C.</p>
+            </article>
+            
+
+            <article class="block">
+              <strong>b2</strong>
+              <span class="muted">来源: example.txt · 页 </span>
+              <p>The term D may refer to a process or a product depending on context.</p>
+            </article>
+            
+    </section>
+    <section id="accepted">
+      <h2>已接受</h2>
+      
+    <article class="card">
+      <div class="card-head">
+        <strong>ann-accepted-0001</strong>
+        <span class="muted">来源: {&quot;document_id&quot;: &quot;generic-example&quot;, &quot;block_id&quot;: &quot;b1&quot;}</span>
+      </div>
+      <p class="source-text">Example item A is made with material B and comes from place C.</p>
+      <div class="row"><b>实体</b><div><div class='entity-row'><span class='mention'>Example item A</span><span class='arrow'>→</span><span class='class-name'>DomainItem</span><span class='meta'>位置 0-14</span><span class='confidence'>置信度 0.92</span></div><div class='entity-row'><span class='mention'>material B</span><span class='arrow'>→</span><span class='class-name'>Material</span><span class='meta'>位置 28-38</span><span class='confidence'>置信度 0.9</span></div><div class='entity-row'><span class='mention'>place C</span><span class='arrow'>→</span><span class='class-name'>Place</span><span class='meta'>位置 54-61</span><span class='confidence'>置信度 0.88</span></div></div></div>
+      <div class="row"><b>关系三元组</b><div><div class='triple-row'><span class='triple-node'>Example item A<small>DomainItem</small></span><span class='predicate'>hasMaterial</span><span class='triple-node'>material B<small>Material</small></span><span class='confidence'>置信度 0.86</span></div><div class='triple-row'><span class='triple-node'>Example item A<small>DomainItem</small></span><span class='predicate'>hasOrigin</span><span class='triple-node'>place C<small>Place</small></span><span class='confidence'>置信度 0.82</span></div></div></div>
+      <div class="row"><b>属性</b><div><span class='muted'>暂无数据</span></div></div>
+      
+    </article>
+    
+    </section>
+    <section id="pending">
+      <h2>待审核</h2>
+      
+    <article class="card">
+      <div class="card-head">
+        <strong>ann-pending-0001</strong>
+        <span class="muted">来源: {&quot;document_id&quot;: &quot;generic-example&quot;, &quot;block_id&quot;: &quot;b2&quot;}</span>
+      </div>
+      <p class="source-text">The term D may refer to a process or a product depending on context.</p>
+      <div class="row"><b>实体</b><div><div class='entity-row'><span class='mention'>term D</span><span class='arrow'>→</span><span class='class-name'>ProcessOrProduct</span><span class='meta'>位置 4-10</span><span class='confidence'>置信度 0.55</span></div></div></div>
+      <div class="row"><b>关系三元组</b><div><span class='muted'>暂无数据</span></div></div>
+      <div class="row"><b>属性</b><div><span class='muted'>暂无数据</span></div></div>
+      
+        <div class="decision" data-item-id="ann-pending-0001">
+          <label><input type="radio" name="decision-0" value="accept"> 接受</label>
+          <label><input type="radio" name="decision-0" value="modify"> 修改</label>
+          <label><input type="radio" name="decision-0" value="reject"> 拒绝</label>
+          <label><input type="radio" name="decision-0" value="defer" checked> 暂缓</label>
+          <textarea placeholder="备注"></textarea>
+        </div>
+        
+    </article>
+    
+      <button onclick="downloadFeedback()">导出反馈 JSON</button>
+      <button onclick="copyPrompt()">复制反馈提示词</button>
+    </section>
+    <section id="rejected">
+      <h2>已拒绝/负例</h2>
+      
+    <article class="card">
+      <div class="card-head">
+        <strong>ann-neg-0001</strong>
+        <span class="muted">来源: {&quot;document_id&quot;: &quot;generic-example&quot;, &quot;block_id&quot;: &quot;b2&quot;}</span>
+      </div>
+      <p class="source-text">The term D may refer to a process or a product depending on context.</p>
+      <div class="row"><b>实体</b><div><span class='muted'>暂无数据</span></div></div>
+      <div class="row"><b>关系三元组</b><div><span class='muted'>暂无数据</span></div></div>
+      <div class="row"><b>属性</b><div><span class='muted'>暂无数据</span></div></div>
+      
+    </article>
+    
+    </section>
+    <section id="audit">
+      <h2>审核报告</h2>
+      <pre># 审核报告
+
+## 统计摘要
+
+- 错误: 0
+- 警告: 1
+
+## 问题列表
+
+| 严重程度 | 行号 | 问题 | 详情 |
+|---|---:|---|---|
+| warning | 1 | ambiguous_class | `term D` 需要用户确认是过程、产品还是不标注。 |
+</pre>
+    </section>
+  </main>
+  <script>
+    function collectFeedback() {
+      return Array.from(document.querySelectorAll('.decision')).map(function(el) {
+        const checked = el.querySelector('input[type="radio"]:checked');
+        const note = el.querySelector('textarea').value;
+        return {
+          item_id: el.dataset.itemId,
+          decision: checked ? checked.value : 'defer',
+          note: note
+        };
+      });
+    }
+    function downloadFeedback() {
+      const payload = {
+        generated_at: new Date().toISOString(),
+        reviews: collectFeedback()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'feedback.json';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    function copyPrompt() {
+      const payload = collectFeedback();
+      const prompt = 'Please revise the pending ontology-guided annotations using this reviewer feedback:\n' + JSON.stringify(payload, null, 2);
+      navigator.clipboard.writeText(prompt).catch(function() {
+        const area = document.createElement('textarea');
+        area.value = prompt;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "document_id": "generic-example",
+  "source": "example.txt",
+  "block_count": 2,
+  "blocks": [
+    {
+      "block_id": "b1",
+      "source": "example.txt",
+      "text": "Example item A is made with material B and comes from place C.",
+      "layout_type": "text",
+      "confidence": null,
+      "extraction_method": "manual-example",
+      "page": null,
+      "section": null
+    },
+    {
+      "block_id": "b2",
+      "source": "example.txt",
+      "text": "The term D may refer to a process or a product depending on context.",
+      "layout_type": "text",
+      "confidence": null,
+      "extraction_method": "manual-example",
+      "page": null,
+      "section": null
+    }
+  ]
+}
